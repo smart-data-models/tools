@@ -13,7 +13,7 @@
 pip3 install -r requirements.txt
 npm install ajv-cli
 
-python3 validator_launcher.py <Folder> [--noLD]
+python3 main.py <Folder> [--noLD]
 ```
 
 ## How to test
