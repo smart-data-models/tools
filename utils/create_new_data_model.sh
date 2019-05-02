@@ -109,14 +109,32 @@ cd dataModel.$1
 rsync -av --progress ../dataModels/templates/dataModel-Repository/ ./
 
 # Copying Data Model Content
-rsync -av --progress --exclude=harvest --exclude=unsupported --exclude=*.py $SOURCE_DATA_MODELS/specs/$1/ ./
+rsync -av --progress --exclude=harvest --exclude=unsupported --exclude=*.py --exclude=*.js --exclude=*.csv --exclude=auxiliary $SOURCE_DATA_MODELS/specs/$1/ ./
+
+
+# If there is introduction but not README then move it
+if [ -f "doc/introduction.md" ]; then
+    rm README.md
+    mv doc/introduction.md README.md
+    rmdir doc
+fi
+
+# Now we add the corresponding badges to the README
+mv README.md README.md.tmp
+echo "[![Status badge](https://img.shields.io/badge/status-draft-red.svg)](RELEASE_NOTES)" >> README.md
+echo "[![Build badge](https://img.shields.io/travis/front-runner-smart-cities/dataModel.$1.svg \"Travis build status\")](https://travis-ci.org/front-runner-smart-cities/dataModel.$1/)" >> README.md
+echo "[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)" >> README.md
+cat README.md.tmp >> README.md
+rm README.md.tmp
+
+# Enabling Travis on it, before next commit
+travis sync
+sleep 3
+travis enable --no-interactive
 
 git add .
 git commit -m "First version from FIWARE Data Models"
 git push origin master
-
-# Enabling Travis on it
-travis enable --no-interactive
 
 cd ../dataModels
 
