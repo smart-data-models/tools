@@ -1,5 +1,17 @@
 #!/bin/sh
 
+: '
+This script creates a new Data Model by copying its content from the FIWARE Data Models Repository
+A new Data Model (vertical theme) is stored in an independent repository
+
+WARNING: If a repository already exists it will be deleted, although a backup will be created
+
+Usage: create_new_data_model.sh <dataModelName>
+
+'
+
+# -- PREPARATION PHASE --
+
 TMP_DIRECTORY=__temp__
 
 if [ "$#" -ne 1 ]; then
@@ -7,18 +19,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
-echo "Data Model to be created: $1"
-
-if [ -z "$SOURCE_DATA_MODELS" ]; then
-  echo "Please define the SOURCE_DATA_MODELS env variable" >&2
-  exit 1
-fi
-
 if [ ! -f .password ]; then
   echo "Please provide a .pasword file for Github credentials" >&2
+  exit 1
 fi
-
-echo "Source Data Models: $SOURCE_DATA_MODELS"
 
 if [ -z "STMP_DIRECTORY" ]; then
   echo "Please define the TMP_DIRECTORY env variable" >&2
@@ -29,10 +33,35 @@ if [ -d "$TMP_DIRECTORY" ]; then
   rm -Rf ./$TMP_DIRECTORY
 fi
 
-mkdir $TMP_DIRECTORY && cd $TMP_DIRECTORY && mkdir backup
-cd ..
+mkdir $TMP_DIRECTORY && cd $TMP_DIRECTORY && mkdir backup && mkdir source
+
+cd source
+git clone https://github.com/FIWARE/dataModels
+
+SOURCE_DATA_MODELS=`pwd`/dataModels
+
+if [ -z "$SOURCE_DATA_MODELS" ]; then
+  echo "Please define the SOURCE_DATA_MODELS env variable" >&2
+  exit 1
+fi
 
 
+if [ ! -d "$SOURCE_DATA_MODELS/specs/$1" ]; then
+  echo "Source Data Model does not exist" >&2
+  exit 1
+fi  
+
+
+echo "Source Data Models: $SOURCE_DATA_MODELS"
+echo "Data Model to be created: $1"
+
+cd ../..
+
+# End of the preparation phase
+
+# ----- PROCESS STARTS HERE ----
+
+# Check whether a Repo already exist
 curl --silent -X GET \
   https://api.github.com/orgs/front-runner-smart-cities/repos \
   -H 'Accept: */*' \
@@ -80,7 +109,7 @@ cd dataModel.$1
 rsync -av --progress ../dataModels/templates/dataModel-Repository/ ./
 
 # Copying Data Model Content
-rsync -av --progress --exclude harvest --exclude *.py $SOURCE_DATA_MODELS/specs/$1/ ./
+rsync -av --progress --exclude=harvest --exclude=unsupported --exclude=*.py $SOURCE_DATA_MODELS/specs/$1/ ./
 
 git add .
 git commit -m "First version from FIWARE Data Models"
@@ -90,6 +119,15 @@ git push origin master
 travis enable --no-interactive
 
 cd ../dataModels
+
+# Recreating the submodule 
+git submodule deinit -f -- specs/$1
+rm -rf .git/modules/specs/$1
+git rm -f specs/$1
+git add .
+git commit -m "Recreation of $1"
+
+# Now adding submodule
 git submodule add --name $1 https://github.com/front-runner-smart-cities/dataModel.$1 specs/$1
 git submodule update --remote
 
