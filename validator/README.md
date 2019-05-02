@@ -19,4 +19,4 @@ python3 main.py <Folder> [--noLD]
 ## How to test
 
 ````
-python -m unittest test/validator_test.py
+python3 -m unittest test/validator_test.py
