@@ -23,7 +23,7 @@ if [ ! -f .password ]; then
   exit 1
 fi
 
-if [ -z "STMP_DIRECTORY" ]; then
+if [ -z "$TMP_DIRECTORY" ]; then
   echo "Please define the TMP_DIRECTORY env variable" >&2
   exit 1
 fi
@@ -52,8 +52,8 @@ curl --silent -X GET \
 if [ "$?" -eq 0 ]; then
   echo "Repository already existing: dataModel.$1. Deleting it. Creating a backup before"
   cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/front-runner-smart-cities/dataModel.$1
-  cd $TMP_DIRECTORY && git clone https://github.com/front-runner-smart-cities/dataModels
-  cd ../..
+  cd .. && git clone https://github.com/front-runner-smart-cities/dataModels
+  cd ..
   curl --silent -X DELETE \
   https://api.github.com/repos/front-runner-smart-cities/dataModel.$1 \
   -H 'Accept: */*' \
