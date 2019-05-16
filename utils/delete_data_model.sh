@@ -52,7 +52,7 @@ curl --silent -X GET \
 if [ "$?" -eq 0 ]; then
   echo "Repository already existing: dataModel.$1. Deleting it. Creating a backup before"
   cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/front-runner-smart-cities/dataModel.$1
-  git clone https://github.com/front-runner-smart-cities/dataModels
+  cd $TMP_DIRECTORY && git clone https://github.com/front-runner-smart-cities/dataModels
   cd ../..
   curl --silent -X DELETE \
   https://api.github.com/repos/front-runner-smart-cities/dataModel.$1 \
