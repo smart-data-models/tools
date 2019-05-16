@@ -36,6 +36,10 @@ mkdir $TMP_DIRECTORY && cd $TMP_DIRECTORY && mkdir backup
 
 echo "Data Model to be deleted: $1"
 
+cd ..
+
+pwd
+
 # End of the preparation phase
 
 # ----- PROCESS STARTS HERE ----
