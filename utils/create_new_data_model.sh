@@ -24,7 +24,7 @@ if [ ! -f .password ]; then
   exit 1
 fi
 
-if [ -z "STMP_DIRECTORY" ]; then
+if [ -z "$TMP_DIRECTORY" ]; then
   echo "Please define the TMP_DIRECTORY env variable" >&2
   exit 1
 fi
