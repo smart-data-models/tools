@@ -38,8 +38,6 @@ echo "Data Model to be deleted: $1"
 
 cd ..
 
-pwd
-
 # End of the preparation phase
 
 # ----- PROCESS STARTS HERE ----
@@ -54,11 +52,15 @@ curl --silent -X GET \
 if [ "$?" -eq 0 ]; then
   echo "Repository already existing: dataModel.$1. Deleting it. Creating a backup before"
   cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/front-runner-smart-cities/dataModel.$1
+  git clone https://github.com/front-runner-smart-cities/dataModels
   cd ../..
   curl --silent -X DELETE \
   https://api.github.com/repos/front-runner-smart-cities/dataModel.$1 \
   -H 'Accept: */*' \
   -H "Authorization: Basic `cat .password`"
+  
+  # Now deleting submodule
+  cd $TMP_DIRECTORY/dataModels
 
   # Recreating the submodule 
   git submodule deinit -f -- specs/$1
