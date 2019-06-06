@@ -67,7 +67,7 @@ if [ "$?" -eq 0 ]; then
   rm -rf .git/modules/specs/$1
   git rm -f specs/$1
   git add .
-  git commit -m "Recreation of $1"
+  git commit -m "Deletion of $1"
   
   git push origin master
   
