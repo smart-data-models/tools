@@ -44,18 +44,18 @@ cd ..
 
 # Check whether a Repo already exist
 curl --silent -X GET \
-  https://api.github.com/orgs/front-runner-smart-cities/repos \
+  https://api.github.com/orgs/smart-data-models/repos \
   -H 'Accept: */*' \
   -H 'Cache-Control: no-cache' \
   -H 'cache-control: no-cache'   | grep dataModel.$1 > /dev/null
 
 if [ "$?" -eq 0 ]; then
   echo "Repository already existing: dataModel.$1. Deleting it. Creating a backup before"
-  cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/front-runner-smart-cities/dataModel.$1
-  cd .. && git clone https://github.com/front-runner-smart-cities/dataModels
+  cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/smart-data-models/dataModel.$1
+  cd .. && git clone https://github.com/smart-data-models/dataModels
   cd ..
   curl --silent -X DELETE \
-  https://api.github.com/repos/front-runner-smart-cities/dataModel.$1 \
+  https://api.github.com/repos/smart-data-models/dataModel.$1 \
   -H 'Accept: */*' \
   -H "Authorization: Basic `cat .password`"
   
