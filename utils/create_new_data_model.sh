@@ -63,17 +63,17 @@ cd ../..
 
 # Check whether a Repo already exist
 curl --silent -X GET \
-  https://api.github.com/orgs/front-runner-smart-cities/repos \
+  https://api.github.com/orgs/smart-data-models/repos \
   -H 'Accept: */*' \
   -H 'Cache-Control: no-cache' \
   -H 'cache-control: no-cache'   | grep dataModel.$1 > /dev/null
 
 if [ "$?" -eq 0 ]; then
   echo "Repository already existing: dataModel.$1. Deleting it. Creating a backup before"
-  cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/front-runner-smart-cities/dataModel.$1
+  cd $TMP_DIRECTORY/backup && git clone --recurse-submodules https://github.com/smart-data-models/dataModel.$1
   cd ../..
   curl --silent -X DELETE \
-  https://api.github.com/repos/front-runner-smart-cities/dataModel.$1 \
+  https://api.github.com/repos/smart-data-models/dataModel.$1 \
   -H 'Accept: */*' \
   -H "Authorization: Basic `cat .password`"
 fi  
@@ -81,7 +81,7 @@ fi
 echo "Creating Repository: dataModel.$1"
 
 curl -X POST \
-  https://api.github.com/orgs/front-runner-smart-cities/repos \
+  https://api.github.com/orgs/smart-data-models/repos \
   -H 'Accept: */*' \
   -H "Authorization: Basic `cat .password`" \
   -H 'Cache-Control: no-cache' \
@@ -100,8 +100,8 @@ curl -X POST \
 cd ./$TMP_DIRECTORY
 
 # Then clone the new created repository
-git clone https://github.com/front-runner-smart-cities/dataModel.$1
-git clone https://github.com/front-runner-smart-cities/dataModels
+git clone https://github.com/smart-data-models/dataModel.$1
+git clone https://github.com/smart-data-models/dataModels
 
 cd dataModel.$1
 
@@ -122,7 +122,7 @@ fi
 # Now we add the corresponding badges to the README
 mv README.md README.md.tmp
 echo "[![Status badge](https://img.shields.io/badge/status-draft-red.svg)](RELEASE_NOTES)" >> README.md
-echo "[![Build badge](https://img.shields.io/travis/front-runner-smart-cities/dataModel.$1.svg \"Travis build status\")](https://travis-ci.org/front-runner-smart-cities/dataModel.$1/)" >> README.md
+echo "[![Build badge](https://img.shields.io/travis/smart-data-models/dataModel.$1.svg \"Travis build status\")](https://travis-ci.org/smart-data-models/dataModel.$1/)" >> README.md
 echo "[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)" >> README.md
 cat README.md.tmp >> README.md
 rm README.md.tmp
@@ -146,7 +146,7 @@ git add .
 git commit -m "Recreation of $1"
 
 # Now adding submodule
-git submodule add --name $1 https://github.com/front-runner-smart-cities/dataModel.$1 specs/$1
+git submodule add --name $1 https://github.com/smart-data-models/dataModel.$1 specs/$1
 git submodule update --remote
 
 git add .
