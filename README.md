@@ -1,5 +1,5 @@
-# Tools for Front Runner Smart Cities
+# Tools for Smart Data Models
 
 Validators, spec checkers, spec generators, etc.
 
-[![Build badge](https://img.shields.io/travis/front-runner-smart-cities/tools.svg "Travis build status")](https://travis-ci.org/front-runner-smart-cities/tools/)
+[![Build badge](https://img.shields.io/travis/smart-data-models/tools.svg "Travis build status")](https://travis-ci.org/smart-data-models/tools/)
